@@ -1,20 +1,36 @@
-/* mbed Microcontroller Library
- * Copyright (c) 2019 ARM Limited
- * SPDX-License-Identifier: Apache-2.0
- */
+/*  External-Button-Template
+*   Operate an LED output with a button input. Configured so button1 controls led1.
+*
+*   Board: NUCLEO L476RG
+*   Author: James Chandler 2021
+*/
 
 #include "mbed.h"
 
-#define WAIT_TIME_MS 500 
-DigitalOut led1(LED1);
+//define output pins
+DigitalOut led1(PC_0);
 
-int main()
-{
-    printf("This is the bare metal blinky example running on Mbed OS %d.%d.%d.\n", MBED_MAJOR_VERSION, MBED_MINOR_VERSION, MBED_PATCH_VERSION);
+//define input pins
+DigitalIn button1(PC_10);
 
-    while (true)
-    {
-        led1 = !led1;
-        thread_sleep_for(WAIT_TIME_MS);
+//declare initialisation functions
+void init_buttons();
+void init_leds();
+
+int main(){
+    init_buttons();           //initalise buttons
+    init_leds();               //initalise led
+
+    while(1){
+
+       led1.write(button1.read()); //assign button1 state to led1.
     }
+}
+
+void init_buttons(){
+    button1.mode(PullNone);  //turn off internal pull up / pull down resistors
+}
+
+void init_leds(){
+    led1.write(0);   //turn off leds by default
 }
